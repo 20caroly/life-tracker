@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>life tracker</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --card: #ffffff;
+    --border: #e6e2dc;
+    --text: #2b2926;
+    --muted: #8a8479;
+    --accent: #6c7a5d;
+    --accent-soft: #eaf0e4;
+    --danger: #b5654f;
+    --done: #b9b3a8;
+    --pri-high-bg: #f9e3df; --pri-high-border: #e2b3a8;
+    --pri-medium-bg: #faf3dc; --pri-medium-border: #e6d79a;
+    --pri-low-bg: #eaf1e6; --pri-low-border: #c8ddc0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 32px 20px 80px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  #settings {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  #settings label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+  #settings input { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+  #settings button { margin-top: 10px; }
+
+  .status-line { font-size: 13px; color: var(--muted); margin-bottom: 20px; min-height: 18px; }
+  .status-line.error { color: var(--danger); }
+
+  section.category { margin-bottom: 28px; }
+  section.category h2 {
+    font-size: 15px; font-weight: 600; margin: 0 0 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .count-pill {
+    font-size: 12px; color: var(--muted); font-weight: 400;
+  }
+
+  .task {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .task.done { opacity: 0.55; }
+  .task.done .title { text-decoration: line-through; color: var(--done); }
+  .task.priority-high { background: var(--pri-high-bg); border-color: var(--pri-high-border); }
+  .task.priority-medium { background: var(--pri-medium-bg); border-color: var(--pri-medium-border); }
+  .task.priority-low { background: var(--pri-low-bg); border-color: var(--pri-low-border); }
+  .task input[type=checkbox] { margin-top: 3px; }
+  .task .body { flex: 1; min-width: 0; }
+  .task .title-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .task .title { font-size: 14px; }
+  .due-badge {
+    font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px;
+    background: rgba(255,255,255,0.7); border: 1px solid var(--border); color: var(--text);
+    white-space: nowrap;
+  }
+  .due-badge.overdue { background: var(--danger); border-color: var(--danger); color: white; }
+  .cat-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.03em; color: var(--muted);
+    background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px;
+  }
+  .task .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .task .row-controls { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
+  .task .row-controls select, .task .row-controls input[type=month] {
+    font-size: 12px; padding: 3px 6px; border: 1px solid var(--border);
+    border-radius: 5px; background: rgba(255,255,255,0.6); color: var(--text);
+  }
+  .task button.del {
+    border: none; background: none; color: var(--muted); cursor: pointer;
+    font-size: 13px; padding: 2px 6px;
+  }
+  .task button.del:hover { color: var(--danger); }
+
+  form.add-form {
+    display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap;
+  }
+  form.add-form input[type=text] {
+    flex: 1; min-width: 160px; padding: 9px 10px; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 14px;
+  }
+  form.add-form select, form.add-form input[type=date], form.add-form input[type=month] {
+    padding: 9px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;
+  }
+  button {
+    background: var(--accent); color: white; border: none; border-radius: 6px;
+    padding: 9px 14px; font-size: 14px; cursor: pointer;
+  }
+  button:hover { opacity: 0.9; }
+  button.secondary { background: var(--accent-soft); color: var(--accent); }
+  button.link {
+    background: none; color: var(--accent); padding: 4px 0; text-decoration: underline; font-size: 13px;
+  }
+
+  #today-schedule {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; margin-bottom: 28px;
+  }
+  #today-schedule .today-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+  }
+  #today-schedule h2 { font-size: 15px; font-weight: 600; margin: 0; }
+  #today-schedule .day-off { color: var(--muted); font-style: italic; font-size: 14px; }
+  .sched-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 7px 10px; border-radius: 6px; margin-bottom: 3px; font-size: 13px;
+  }
+  .sched-row .sched-time { width: 62px; flex-shrink: 0; color: var(--muted); font-size: 12px; }
+  .sched-row .sched-label { flex: 1; }
+  .sched-row.sched-now { outline: 2px solid var(--accent); font-weight: 600; }
+  .sched-row.sched-now .sched-time::before { content: "now · "; color: var(--accent); font-weight: 700; }
+  .sched-c-purple { background: #e9dfef; }
+  .sched-c-blue { background: #dde8f5; }
+  .sched-c-green { background: #ddefe1; }
+  .sched-c-tan { background: #f8e8cc; }
+  .sched-c-yellow { background: #faf3c8; }
+  .sched-c-red { background: #f6d9d5; }
+  .sched-c-skyblue { background: #e1eaf3; }
+  .sched-c-white { background: #ffffff; border: 1px dashed var(--border); }
+  .sched-c-gray { background: #ececea; }
+
+  .color-dot {
+    width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.15);
+  }
+  .color-dot.sched-c-purple { background: #e9dfef; }
+  .color-dot.sched-c-blue { background: #dde8f5; }
+  .color-dot.sched-c-green { background: #ddefe1; }
+  .color-dot.sched-c-tan { background: #f8e8cc; }
+  .color-dot.sched-c-yellow { background: #faf3c8; }
+  .color-dot.sched-c-red { background: #f6d9d5; }
+  .color-dot.sched-c-gray { background: #ececea; }
+  .color-dot.sched-c-white { background: #ffffff; }
+
+  #schedule-editor { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .day-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+  .day-tabs button {
+    background: var(--accent-soft); color: var(--accent); padding: 5px 10px; font-size: 12px; border-radius: 5px;
+  }
+  .day-tabs button.active { background: var(--accent); color: white; }
+  .freeday-toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 10px; }
+  .edit-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
+  }
+  .edit-row input[type=time] {
+    width: 90px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px;
+  }
+  .edit-row input[type=text] {
+    flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; font-size: 13px;
+  }
+  .edit-row select {
+    padding: 5px 6px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px;
+  }
+  .edit-row button.del {
+    border: none; background: none; color: var(--muted); cursor: pointer; font-size: 13px;
+  }
+  .edit-row button.del:hover { color: var(--danger); }
+  #add-block-btn { margin-top: 6px; }
+
+  #checkins { margin-top: 8px; }
+  #checkins .entry {
+    font-size: 13px; padding: 8px 10px; border-left: 2px solid var(--border);
+    margin-bottom: 8px; color: var(--muted);
+  }
+  #checkins .entry .date { color: var(--text); font-weight: 600; margin-right: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>life tracker</h1>
+  <div class="sub">job hunt + MFA prep, synced to <code>20caroly/life-tracker</code></div>
+
+  <div id="settings">
+    <label for="token">GitHub token (stored only in this browser)</label>
+    <input id="token" type="password" placeholder="github_pat_...">
+    <button id="save-token">Save token</button>
+  </div>
+
+  <div class="status-line" id="status"></div>
+
+  <div id="app" style="display:none">
+    <section class="category" id="today-tasks">
+      <h2>Today's Focus</h2>
+      <div id="today-tasks-list"></div>
+    </section>
+
+    <section id="today-schedule">
+      <div class="today-header">
+        <h2 id="today-heading">Today</h2>
+        <button class="link" id="toggle-editor">edit schedule</button>
+      </div>
+      <div id="schedule-list"></div>
+
+      <div id="schedule-editor" style="display:none">
+        <div class="day-tabs" id="day-tabs"></div>
+        <label class="freeday-toggle">
+          <input type="checkbox" id="freeday-checkbox"> this is a free day (no blocks)
+        </label>
+        <div id="block-rows"></div>
+        <button class="secondary" id="add-block-btn" type="button">+ add block</button>
+      </div>
+    </section>
+
+    <section class="category" data-cat="job">
+      <h2>Job Hunt <span class="count-pill" id="count-job"></span></h2>
+      <div class="tasks" id="tasks-job"></div>
+      <form class="add-form" data-cat="job">
+        <input type="text" placeholder="Add a task..." required>
+        <input type="date">
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <section class="category" data-cat="mfa">
+      <h2>MFA Prep <span class="count-pill" id="count-mfa"></span></h2>
+      <div class="tasks" id="tasks-mfa"></div>
+      <form class="add-form" data-cat="mfa">
+        <input type="text" placeholder="Add a task..." required>
+        <input type="month" title="due month">
+        <button type="submit">Add</button>
+      </form>
+    </section>
+
+    <button id="show-done" class="secondary">show/hide done tasks</button>
+
+    <section class="category">
+      <h2 style="margin-top:24px">Check-in log</h2>
+      <div id="checkins"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const REPO = "20caroly/life-tracker";
+const FILE_PATH = "tasks.json";
+const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
+const DUE_TYPES = ["", "EOT", "EOD", "EOW", "EOM"];
+const DUE_TYPE_LABEL = { "": "no due type", EOT: "end of tomorrow", EOD: "end of day", EOW: "end of week", EOM: "end of month" };
+const PRIORITIES = ["high", "medium", "low"];
+const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const DAY_KEYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+const DAY_LABELS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+function autoColor(label) {
+  const l = (label || "").toLowerCase().trim();
+  if (!l) return "white";
+  if (l.includes("getting ready") || l.includes("get ready")) return "purple";
+  if (l.includes("break") || l.includes("free time")) return "yellow";
+  if (l.includes("grad school")) return "green";
+  if (l.includes("job") || l.includes("apply")) return "blue";
+  if (l.includes("lunch") || l.includes("dinner")) return "tan";
+  return "gray";
+}
+
+function weekdayBlocks(isFriday) {
+  return [
+    { time: "09:00", label: "Getting ready", color: "purple" },
+    { time: "10:00", label: "Browse job opportunities; reflect", color: "blue" },
+    { time: "11:00", label: "Grad school", color: "green" },
+    { time: "12:00", label: "Grad school", color: "green" },
+    { time: "13:00", label: "Lunch", color: "tan" },
+    { time: "14:00", label: "Apply to jobs", color: "blue" },
+    { time: "15:00", label: "Apply to jobs", color: "blue" },
+    { time: "16:00", label: "Break", color: "tan" },
+    { time: "17:00", label: "Grad school", color: "green" },
+    { time: "18:00", label: "Grad school", color: "green" },
+    { time: "19:00", label: "Dinner", color: "tan" },
+    { time: "20:00", label: "Dinner", color: "tan" },
+    { time: "21:00", label: "Free time", color: "yellow" },
+    { time: "22:00", label: "Free time", color: "yellow" },
+    { time: "23:00", label: isFriday ? "Free time" : "Get ready for bed", color: isFriday ? "yellow" : "purple" },
+  ];
+}
+
+function d(blocks) { return { freeDay: false, blocks }; }
+
+const DEFAULT_SCHEDULE = {
+  monday: d(weekdayBlocks(false)),
+  tuesday: d(weekdayBlocks(false)),
+  wednesday: d(weekdayBlocks(false)),
+  thursday: d(weekdayBlocks(false)),
+  friday: d(weekdayBlocks(true)),
+  saturday: { freeDay: true, blocks: [] },
+  sunday: d([
+    { time: "09:00", label: "", color: "white" },
+    { time: "10:00", label: "Getting ready", color: "purple" },
+    { time: "11:00", label: "Farmers market", color: "green" },
+    { time: "12:00", label: "Meeting with mom and dad", color: "red" },
+    { time: "13:00", label: "Lunch", color: "tan" },
+    { time: "14:00", label: "Laundry", color: "green" },
+    { time: "15:00", label: "Cleaning", color: "green" },
+    { time: "16:00", label: "Break", color: "tan" },
+    { time: "17:00", label: "Cleaning", color: "green" },
+    { time: "18:00", label: "Free time", color: "yellow" },
+    { time: "19:00", label: "Dinner", color: "tan" },
+    { time: "20:00", label: "Dinner", color: "tan" },
+    { time: "21:00", label: "Free time", color: "yellow" },
+    { time: "22:00", label: "Free time", color: "yellow" },
+    { time: "23:00", label: "Get ready for bed", color: "purple" },
+  ]),
+};
+
+function normalizeSchedule(schedule) {
+  let changed = false;
+  const out = {};
+  for (const key of DAY_KEYS) {
+    const day = schedule[key];
+    if (Array.isArray(day)) {
+      // old format migration
+      changed = true;
+      if (day.length === 1 && day[0].color === "skyblue") {
+        out[key] = { freeDay: true, blocks: [] };
+      } else {
+        out[key] = { freeDay: false, blocks: day };
+      }
+    } else if (day && typeof day === "object") {
+      out[key] = { freeDay: !!day.freeDay, blocks: day.blocks || [] };
+    } else {
+      changed = true;
+      out[key] = DEFAULT_SCHEDULE[key];
+    }
+  }
+  return { schedule: out, changed };
+}
+
+let state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE };
+let sha = null;
+let showDone = false;
+let editingDay = DAY_KEYS[new Date().getDay()];
+let editorOpen = false;
+
+const $ = sel => document.querySelector(sel);
+const statusEl = $("#status");
+const tokenInput = $("#token");
+
+function setStatus(msg, isError) {
+  statusEl.textContent = msg || "";
+  statusEl.classList.toggle("error", !!isError);
+}
+
+function getToken() { return localStorage.getItem("lt_token") || ""; }
+function setToken(t) { localStorage.setItem("lt_token", t); }
+
+async function apiGet() {
+  const res = await fetch(API, {
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: "application/vnd.github+json" }
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GitHub GET failed: ${res.status}`);
+  const data = await res.json();
+  sha = data.sha;
+  return JSON.parse(decodeURIComponent(escape(atob(data.content))));
+}
+
+async function apiPut(newState, message) {
+  const body = {
+    message: message || "update tasks",
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(newState, null, 2)))),
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(API, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`GitHub PUT failed: ${res.status} ${t}`);
+  }
+  const data = await res.json();
+  sha = data.content.sha;
+}
+
+async function load() {
+  setStatus("loading...");
+  try {
+    const remote = await apiGet();
+    if (remote === null) {
+      state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE };
+      await apiPut(state, "init tracker");
+      setStatus("created tasks.json in repo");
+    } else {
+      state = remote;
+      if (!state.schedule) {
+        state.schedule = DEFAULT_SCHEDULE;
+        await apiPut(state, "add weekly schedule template");
+      } else {
+        const { schedule, changed } = normalizeSchedule(state.schedule);
+        state.schedule = schedule;
+        if (changed) await apiPut(state, "migrate schedule format");
+      }
+      setStatus("");
+    }
+    $("#app").style.display = "block";
+    render();
+  } catch (e) {
+    setStatus(e.message, true);
+  }
+}
+
+async function persist(message) {
+  setStatus("saving...");
+  try {
+    await apiPut(state, message);
+    setStatus("saved");
+    setTimeout(() => setStatus(""), 1500);
+  } catch (e) {
+    setStatus(e.message + " — reloading latest before you edit again", true);
+    await load();
+  }
+}
+
+// Accepts "YYYY-MM-DD" or "YYYY-MM". Returns { label, overdue }
+function dueInfo(dstr) {
+  if (!dstr) return null;
+  const isMonthOnly = dstr.length === 7;
+  const today = new Date(); today.setHours(0,0,0,0);
+  let due, label;
+  if (isMonthOnly) {
+    const [y, m] = dstr.split("-").map(Number);
+    due = new Date(y, m, 0); // last day of that month
+    label = `${MONTH_NAMES[m - 1]} ${y}`;
+  } else {
+    due = new Date(dstr + "T00:00:00");
+    label = dstr;
+  }
+  return { label, overdue: due < today };
+}
+
+function fmtTime(time) {
+  const [h, m] = time.split(":").map(Number);
+  return `${((h % 12) || 12)}:${String(m).padStart(2, "0")} ${h < 12 ? "am" : "pm"}`;
+}
+
+function renderSchedule() {
+  const now = new Date();
+  const todayKey = DAY_KEYS[now.getDay()];
+  $("#today-heading").textContent = `Today — ${DAY_LABELS[now.getDay()]}`;
+
+  const day = (state.schedule && state.schedule[todayKey]) || { freeDay: false, blocks: [] };
+  const list = $("#schedule-list");
+  list.innerHTML = "";
+
+  if (day.freeDay) {
+    list.innerHTML = '<div class="day-off">Free day 🎉</div>';
+  } else {
+    const currentHour = now.getHours();
+    for (const b of day.blocks) {
+      const blockHour = parseInt(b.time.split(":")[0], 10);
+      const isNow = blockHour === currentHour;
+      const row = document.createElement("div");
+      row.className = `sched-row sched-c-${autoColor(b.label)}${isNow ? " sched-now" : ""}`;
+      row.innerHTML = `<span class="sched-time">${fmtTime(b.time)}</span><span class="sched-label">${escapeHtml(b.label)}</span>`;
+      list.appendChild(row);
+    }
+  }
+
+  if (editorOpen) renderEditor();
+}
+
+function renderEditor() {
+  const tabs = $("#day-tabs");
+  tabs.innerHTML = "";
+  DAY_KEYS.forEach((key, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = DAY_LABELS[i].slice(0, 3);
+    btn.className = key === editingDay ? "active" : "";
+    btn.addEventListener("click", () => { editingDay = key; renderEditor(); });
+    tabs.appendChild(btn);
+  });
+
+  const day = state.schedule[editingDay] || { freeDay: false, blocks: [] };
+  const freeCb = $("#freeday-checkbox");
+  freeCb.checked = day.freeDay;
+  freeCb.onchange = () => {
+    state.schedule[editingDay].freeDay = freeCb.checked;
+    persist(`toggle free day: ${editingDay}`);
+    renderEditor();
+    renderSchedule();
+  };
+
+  const rows = $("#block-rows");
+  rows.innerHTML = "";
+  $("#add-block-btn").style.display = day.freeDay ? "none" : "inline-block";
+  if (day.freeDay) return;
+
+  day.blocks.forEach((b, i) => {
+    const row = document.createElement("div");
+    row.className = "edit-row";
+    row.innerHTML = `
+      <input type="time" value="${b.time}">
+      <input type="text" value="${escapeHtml(b.label)}" placeholder="what's happening">
+      <span class="color-dot sched-c-${autoColor(b.label)}" title="color is automatic, based on the words in the task"></span>
+      <button type="button" class="del">✕</button>
+    `;
+    const [timeInput, textInput] = row.querySelectorAll("input");
+    const dot = row.querySelector(".color-dot");
+    timeInput.addEventListener("change", () => {
+      b.time = timeInput.value;
+      day.blocks.sort((x, y) => x.time.localeCompare(y.time));
+      persist(`edit schedule block: ${editingDay}`);
+      renderEditor(); renderSchedule();
+    });
+    textInput.addEventListener("input", () => {
+      dot.className = `color-dot sched-c-${autoColor(textInput.value)}`;
+    });
+    textInput.addEventListener("change", () => {
+      b.label = textInput.value;
+      persist(`edit schedule block: ${editingDay}`);
+      renderSchedule();
+    });
+    row.querySelector(".del").addEventListener("click", () => {
+      day.blocks.splice(i, 1);
+      persist(`remove schedule block: ${editingDay}`);
+      renderEditor(); renderSchedule();
+    });
+    rows.appendChild(row);
+  });
+}
+
+$("#toggle-editor").addEventListener("click", () => {
+  editorOpen = !editorOpen;
+  $("#schedule-editor").style.display = editorOpen ? "block" : "none";
+  $("#toggle-editor").textContent = editorOpen ? "close editor" : "edit schedule";
+  if (editorOpen) renderEditor();
+});
+
+$("#add-block-btn").addEventListener("click", () => {
+  const day = state.schedule[editingDay];
+  const lastHour = day.blocks.length ? parseInt(day.blocks[day.blocks.length - 1].time.split(":")[0], 10) + 1 : 9;
+  day.blocks.push({ time: `${String(Math.min(lastHour, 23)).padStart(2, "0")}:00`, label: "" });
+  persist(`add schedule block: ${editingDay}`);
+  renderEditor(); renderSchedule();
+});
+
+const PRIORITY_RANK = { high: 0, medium: 1, low: 2 };
+const DUE_TYPE_RANK = { EOD: 0, EOT: 1, EOW: 2, EOM: 3, "": 4 };
+function compareTasks(a, b) {
+  const doneA = a.status === "done", doneB = b.status === "done";
+  if (doneA !== doneB) return doneA ? 1 : -1;
+  const pa = PRIORITY_RANK[a.priority] ?? 1, pb = PRIORITY_RANK[b.priority] ?? 1;
+  if (pa !== pb) return pa - pb;
+  const dta = DUE_TYPE_RANK[a.dueType || ""] ?? 4, dtb = DUE_TYPE_RANK[b.dueType || ""] ?? 4;
+  if (dta !== dtb) return dta - dtb;
+  if (!a.dueDate && !b.dueDate) return 0;
+  if (!a.dueDate) return 1;
+  if (!b.dueDate) return -1;
+  return a.dueDate.localeCompare(b.dueDate);
+}
+
+function renderTodayTasks() {
+  const open = state.tasks.filter(t => t.status !== "done");
+  const top = [...open].sort(compareTasks).slice(0, 3);
+  const list = $("#today-tasks-list");
+  list.innerHTML = "";
+  if (!top.length) {
+    list.innerHTML = '<div class="day-off">nothing open — you\'re clear</div>';
+    return;
+  }
+  for (const t of top) {
+    const info = dueInfo(t.dueDate);
+    const badge = info ? `<span class="due-badge${info.overdue ? " overdue" : ""}">due ${info.label}</span>` : "";
+    const row = document.createElement("div");
+    row.className = "task" + (t.category === "mfa" ? ` priority-${t.priority || "medium"}` : "");
+    row.innerHTML = `
+      <input type="checkbox">
+      <div class="body">
+        <div class="title-line"><span class="cat-tag">${t.category === "mfa" ? "MFA" : "JOB"}</span><span class="title">${escapeHtml(t.title)}</span>${badge}</div>
+      </div>
+    `;
+    row.querySelector("input").addEventListener("change", e => {
+      t.status = e.target.checked ? "done" : "todo";
+      persist(`mark "${t.title}" ${t.status}`);
+      render();
+    });
+    list.appendChild(row);
+  }
+}
+
+function render() {
+  renderTodayTasks();
+  renderSchedule();
+
+  for (const cat of ["job", "mfa"]) {
+    const list = state.tasks.filter(t => t.category === cat && (showDone || t.status !== "done"));
+    list.sort(compareTasks);
+    const container = $(`#tasks-${cat}`);
+    container.innerHTML = "";
+    for (const t of list) {
+      const div = document.createElement("div");
+      const priClass = cat === "mfa" ? ` priority-${t.priority || "medium"}` : "";
+      div.className = "task" + (t.status === "done" ? " done" : "") + priClass;
+
+      const info = dueInfo(t.dueDate);
+      const badge = info ? `<span class="due-badge${info.overdue ? " overdue" : ""}">due ${info.label}</span>` : "";
+
+      let controlsHtml = "";
+      if (cat === "mfa") {
+        controlsHtml = `
+          <div class="row-controls">
+            <select class="pri-select">${PRIORITIES.map(p => `<option value="${p}" ${(t.priority || "medium") === p ? "selected" : ""}>${p}</option>`).join("")}</select>
+            <select class="duetype-select">${DUE_TYPES.map(dt => `<option value="${dt}" ${(t.dueType || "") === dt ? "selected" : ""}>${DUE_TYPE_LABEL[dt]}</option>`).join("")}</select>
+            <input type="month" class="due-month-input" value="${(t.dueDate && t.dueDate.length === 7) ? t.dueDate : ""}" title="due month">
+          </div>`;
+      }
+
+      div.innerHTML = `
+        <input type="checkbox" ${t.status === "done" ? "checked" : ""}>
+        <div class="body">
+          <div class="title-line"><span class="title">${escapeHtml(t.title)}</span>${badge}</div>
+          ${t.notes ? `<div class="meta">${escapeHtml(t.notes)}</div>` : ""}
+          ${controlsHtml}
+        </div>
+        <button class="del">✕</button>
+      `;
+      div.querySelector('input[type=checkbox]').addEventListener("change", e => {
+        t.status = e.target.checked ? "done" : "todo";
+        persist(`mark "${t.title}" ${t.status}`);
+        render();
+      });
+      div.querySelector(".del").addEventListener("click", () => {
+        state.tasks = state.tasks.filter(x => x.id !== t.id);
+        persist(`remove "${t.title}"`);
+        render();
+      });
+      const priSel = div.querySelector(".pri-select");
+      if (priSel) priSel.addEventListener("change", e => {
+        t.priority = e.target.value;
+        persist(`set priority "${t.title}" -> ${t.priority}`);
+        render();
+      });
+      const dueSel = div.querySelector(".duetype-select");
+      if (dueSel) dueSel.addEventListener("change", e => {
+        t.dueType = e.target.value;
+        persist(`set due type "${t.title}" -> ${t.dueType || "none"}`);
+        render();
+      });
+      const dueMonthInput = div.querySelector(".due-month-input");
+      if (dueMonthInput) dueMonthInput.addEventListener("change", e => {
+        t.dueDate = e.target.value || null;
+        persist(`set due month "${t.title}" -> ${t.dueDate || "none"}`);
+        render();
+      });
+      container.appendChild(div);
+    }
+    const open = state.tasks.filter(t => t.category === cat && t.status !== "done").length;
+    $(`#count-${cat}`).textContent = open ? `${open} open` : "all clear";
+  }
+
+  const ci = $("#checkins");
+  ci.innerHTML = "";
+  const entries = [...state.checkins].sort((a,b) => b.date.localeCompare(a.date)).slice(0, 10);
+  if (!entries.length) {
+    ci.innerHTML = '<div class="entry">no check-ins logged yet</div>';
+  }
+  for (const c of entries) {
+    const div = document.createElement("div");
+    div.className = "entry";
+    div.innerHTML = `<span class="date">${c.date}</span>${escapeHtml(c.summary)}`;
+    ci.appendChild(div);
+  }
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+document.querySelectorAll(".add-form").forEach(form => {
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const cat = form.dataset.cat;
+    const titleInput = form.querySelector('input[type=text]');
+    const dateInput = form.querySelector('input[type=date], input[type=month]');
+    const title = titleInput.value.trim();
+    if (!title) return;
+    const task = {
+      id: crypto.randomUUID(),
+      category: cat,
+      title,
+      status: "todo",
+      dueDate: dateInput.value || null,
+      notes: "",
+    };
+    if (cat === "mfa") {
+      task.priority = "medium";
+      task.dueType = "";
+    }
+    state.tasks.push(task);
+    titleInput.value = "";
+    dateInput.value = "";
+    persist(`add "${title}"`);
+    render();
+  });
+});
+
+$("#show-done").addEventListener("click", () => { showDone = !showDone; render(); });
+
+$("#save-token").addEventListener("click", () => {
+  setToken(tokenInput.value.trim());
+  tokenInput.value = "";
+  tokenInput.placeholder = "token saved ✓";
+  load();
+});
+
+if (getToken()) {
+  tokenInput.placeholder = "token saved ✓ (paste a new one to replace)";
+  load();
+}
+
+setInterval(renderSchedule, 60000);
+</script>
+</body>
+</html>
