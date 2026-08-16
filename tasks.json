@@ -1,4 +1,13 @@
 {
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "39109af2-a66e-4315-91d7-ca51913865c6",
+      "category": "mfa",
+      "title": "Ask 3 recommenders for letters of rec",
+      "status": "todo",
+      "dueDate": null,
+      "notes": ""
+    }
+  ],
   "checkins": []
 }
