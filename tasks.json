@@ -27,5 +27,476 @@
       "dueType": "EOW"
     }
   ],
-  "checkins": []
+  "checkins": [],
+  "schedule": {
+    "monday": [
+      {
+        "time": "09:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "10:00",
+        "label": "Browse job opportunities; reflect",
+        "color": "blue"
+      },
+      {
+        "time": "11:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "15:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Get ready for bed",
+        "color": "purple"
+      }
+    ],
+    "tuesday": [
+      {
+        "time": "09:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "10:00",
+        "label": "Browse job opportunities; reflect",
+        "color": "blue"
+      },
+      {
+        "time": "11:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "15:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Get ready for bed",
+        "color": "purple"
+      }
+    ],
+    "wednesday": [
+      {
+        "time": "09:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "10:00",
+        "label": "Browse job opportunities; reflect",
+        "color": "blue"
+      },
+      {
+        "time": "11:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "15:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Get ready for bed",
+        "color": "purple"
+      }
+    ],
+    "thursday": [
+      {
+        "time": "09:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "10:00",
+        "label": "Browse job opportunities; reflect",
+        "color": "blue"
+      },
+      {
+        "time": "11:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "15:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Get ready for bed",
+        "color": "purple"
+      }
+    ],
+    "friday": [
+      {
+        "time": "09:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "10:00",
+        "label": "Browse job opportunities; reflect",
+        "color": "blue"
+      },
+      {
+        "time": "11:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "15:00",
+        "label": "Apply to jobs",
+        "color": "blue"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Grad school",
+        "color": "green"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Free time",
+        "color": "yellow"
+      }
+    ],
+    "saturday": [
+      {
+        "time": "09:00",
+        "label": "Free day",
+        "color": "skyblue"
+      }
+    ],
+    "sunday": [
+      {
+        "time": "09:00",
+        "label": "",
+        "color": "white"
+      },
+      {
+        "time": "10:00",
+        "label": "Getting ready",
+        "color": "purple"
+      },
+      {
+        "time": "11:00",
+        "label": "Farmers market",
+        "color": "green"
+      },
+      {
+        "time": "12:00",
+        "label": "Meeting with mom and dad",
+        "color": "red"
+      },
+      {
+        "time": "13:00",
+        "label": "Lunch",
+        "color": "tan"
+      },
+      {
+        "time": "14:00",
+        "label": "Laundry",
+        "color": "green"
+      },
+      {
+        "time": "15:00",
+        "label": "Cleaning",
+        "color": "green"
+      },
+      {
+        "time": "16:00",
+        "label": "Break",
+        "color": "tan"
+      },
+      {
+        "time": "17:00",
+        "label": "Cleaning",
+        "color": "green"
+      },
+      {
+        "time": "18:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "19:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "20:00",
+        "label": "Dinner",
+        "color": "tan"
+      },
+      {
+        "time": "21:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "22:00",
+        "label": "Free time",
+        "color": "yellow"
+      },
+      {
+        "time": "23:00",
+        "label": "Get ready for bed",
+        "color": "purple"
+      }
+    ]
+  }
 }
