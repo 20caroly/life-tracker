@@ -24,7 +24,7 @@
       "dueDate": null,
       "notes": "",
       "priority": "high",
-      "dueType": ""
+      "dueType": "EOW"
     }
   ],
   "checkins": []
