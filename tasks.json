@@ -15,6 +15,16 @@
       "status": "todo",
       "dueDate": null,
       "notes": ""
+    },
+    {
+      "id": "cbc6d538-9e07-42e5-afcb-5eaf8d708b9a",
+      "category": "mfa",
+      "title": "Assemble current work list + create work production timeline",
+      "status": "todo",
+      "dueDate": null,
+      "notes": "",
+      "priority": "medium",
+      "dueType": ""
     }
   ],
   "checkins": []
