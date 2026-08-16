@@ -7,6 +7,14 @@
       "status": "todo",
       "dueDate": null,
       "notes": ""
+    },
+    {
+      "id": "aa34abeb-71cd-4724-b33b-5f187ccb8466",
+      "category": "mfa",
+      "title": "Start portfolio/writing sample work",
+      "status": "todo",
+      "dueDate": null,
+      "notes": ""
     }
   ],
   "checkins": []
