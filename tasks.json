@@ -25,9 +25,22 @@
       "notes": "",
       "priority": "high",
       "dueType": "EOW"
+    },
+    {
+      "id": "b7e1a4d0-3c2f-4a91-9e6b-1f2d5c8a7b3e",
+      "category": "job",
+      "title": "Apply to jobs found on NYFA",
+      "status": "doing",
+      "dueDate": null,
+      "notes": "First step: open one listing and click apply, don't fill it out yet"
     }
   ],
-  "checkins": [],
+  "checkins": [
+    {
+      "date": "2026-08-18",
+      "summary": "Cleaned room yesterday. Today: applying to jobs found on NYFA, starting with just opening one listing and clicking apply."
+    }
+  ],
   "schedule": {
     "sunday": {
       "freeDay": false,
