@@ -67,6 +67,13 @@
   .task .body { flex: 1; min-width: 0; }
   .task .title-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .task .title { font-size: 14px; }
+  .task .title.editable-title { cursor: text; border-bottom: 1px dashed transparent; }
+  .task .title.editable-title:hover { border-bottom-color: var(--muted); }
+  .title-edit-input {
+    font-size: 14px; font-family: inherit; color: var(--text);
+    padding: 1px 4px; border: 1px solid var(--accent); border-radius: 4px;
+    min-width: 120px;
+  }
   .due-badge {
     font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px;
     background: rgba(255,255,255,0.7); border: 1px solid var(--border); color: var(--text);
@@ -341,7 +348,7 @@ function normalizeSchedule(schedule) {
   return { schedule: out, changed };
 }
 
-let state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE };
+let state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE, focusLog: [] };
 let sha = null;
 let showDone = false;
 let editingDay = DAY_KEYS[new Date().getDay()];
@@ -398,19 +405,25 @@ async function load() {
   try {
     const remote = await apiGet();
     if (remote === null) {
-      state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE };
+      state = { tasks: [], checkins: [], schedule: DEFAULT_SCHEDULE, focusLog: [] };
       await apiPut(state, "init tracker");
       setStatus("created tasks.json in repo");
     } else {
       state = remote;
+      let needsSave = false;
       if (!state.schedule) {
         state.schedule = DEFAULT_SCHEDULE;
-        await apiPut(state, "add weekly schedule template");
+        needsSave = "add weekly schedule template";
       } else {
         const { schedule, changed } = normalizeSchedule(state.schedule);
         state.schedule = schedule;
-        if (changed) await apiPut(state, "migrate schedule format");
+        if (changed) needsSave = "migrate schedule format";
       }
+      if (!state.focusLog) {
+        state.focusLog = [];
+        needsSave = needsSave || "add focus log";
+      }
+      if (needsSave) await apiPut(state, needsSave);
       setStatus("");
     }
     $("#app").style.display = "block";
@@ -571,9 +584,55 @@ function compareTasks(a, b) {
   return a.dueDate.localeCompare(b.dueDate);
 }
 
+function todayStr() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
+// Makes a rendered title span click-to-rename. Manual, site-only edit —
+// the daily check-in routine never rewrites an existing task's fields.
+function makeEditableTitle(titleEl, task) {
+  titleEl.classList.add("editable-title");
+  titleEl.title = "click to rename";
+  titleEl.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "title-edit-input";
+    input.value = task.title;
+    titleEl.replaceWith(input);
+    input.focus();
+    input.select();
+    let done = false;
+    const commit = () => {
+      if (done) return;
+      done = true;
+      const val = input.value.trim();
+      if (val && val !== task.title) {
+        task.title = val;
+        persist(`rename task -> "${val}"`);
+      }
+      render();
+    };
+    input.addEventListener("blur", commit);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+      if (e.key === "Escape") { input.value = task.title; input.blur(); }
+    });
+  });
+}
+
 function renderTodayTasks() {
-  const open = state.tasks.filter(t => t.status !== "done");
-  const top = [...open].sort(compareTasks).slice(0, 3);
+  const focusEntry = (state.focusLog || []).find(f => f.date === todayStr());
+  let top = null;
+  if (focusEntry && focusEntry.taskIds && focusEntry.taskIds.length) {
+    top = focusEntry.taskIds
+      .map(id => state.tasks.find(t => t.id === id))
+      .filter(t => t && t.status !== "done");
+  }
+  if (!top || !top.length) {
+    const open = state.tasks.filter(t => t.status !== "done");
+    top = [...open].sort(compareTasks).slice(0, 3);
+  }
   const list = $("#today-tasks-list");
   list.innerHTML = "";
   if (!top.length) {
@@ -596,6 +655,7 @@ function renderTodayTasks() {
       persist(`mark "${t.title}" ${t.status}`);
       render();
     });
+    makeEditableTitle(row.querySelector(".title"), t);
     list.appendChild(row);
   }
 }
@@ -641,6 +701,7 @@ function render() {
         persist(`mark "${t.title}" ${t.status}`);
         render();
       });
+      makeEditableTitle(div.querySelector(".title"), t);
       div.querySelector(".del").addEventListener("click", () => {
         state.tasks = state.tasks.filter(x => x.id !== t.id);
         persist(`remove "${t.title}"`);
