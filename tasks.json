@@ -37,8 +37,8 @@
   ],
   "checkins": [
     {
-      "date": "2026-08-18",
-      "summary": "Cleaned room yesterday. Today: applying to jobs found on NYFA, starting with just opening one listing and clicking apply."
+      "date": "2026-08-19",
+      "summary": "Cleaned room yesterday; today started late, so scaled the plan down to applying to 1 NYFA job and coding on a friend's website tonight."
     }
   ],
   "schedule": {
@@ -526,5 +526,23 @@
       "freeDay": true,
       "blocks": []
     }
-  }
+  },
+  "scheduleLog": [
+    {
+      "date": "2026-08-19",
+      "blocks": [
+        {
+          "time": "tonight",
+          "label": "Apply to 1 job (NYFA)",
+          "color": "blue"
+        },
+        {
+          "time": "tonight",
+          "label": "Code on friend's website",
+          "color": "green"
+        }
+      ],
+      "changes": "Late start scrapped the full Wednesday template; scaled down to two evening tasks."
+    }
+  ]
 }
