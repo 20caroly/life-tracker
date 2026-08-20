@@ -43,6 +43,10 @@
     {
       "date": "2026-08-19",
       "summary": "Cleaned room yesterday; today started late, so scaled the plan down to applying to 1 NYFA job and coding on a friend's website tonight."
+    },
+    {
+      "date": "2026-08-20",
+      "summary": "Headache took out all of yesterday. Today: applied to the NYFA publicity/marketing internship, now out running errands with plans to check back in and map out the rest of the day."
     }
   ],
   "schedule": {
@@ -538,6 +542,22 @@
     }
   ],
   "scheduleLog": [
+    {
+      "date": "2026-08-20",
+      "blocks": [
+        {
+          "time": "morning",
+          "label": "Applied to NYFA job (done!)",
+          "color": "blue"
+        },
+        {
+          "time": "midday",
+          "label": "Out running errands",
+          "color": "tan"
+        }
+      ],
+      "changes": "Applied to one job in the morning, then went out to run errands; rest of day to be planned after she's back."
+    },
     {
       "date": "2026-08-19",
       "blocks": [
