@@ -531,6 +531,12 @@
       "blocks": []
     }
   },
+  "focusLog": [
+    {
+      "date": "2026-08-20",
+      "taskIds": ["b7e1a4d0-3c2f-4a91-9e6b-1f2d5c8a7b3e"]
+    }
+  ],
   "scheduleLog": [
     {
       "date": "2026-08-19",
