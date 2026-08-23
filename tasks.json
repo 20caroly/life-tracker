@@ -33,6 +33,14 @@
       "status": "doing",
       "dueDate": null,
       "notes": "First step: open one listing and click apply, don't fill it out yet"
+    },
+    {
+      "id": "6fb96cc8-d94c-4530-9393-9291ea4a7bcd",
+      "category": "job",
+      "title": "Apply: Graphic Design & Web Presence — Laurel Road Studios (Chelsea)",
+      "status": "todo",
+      "dueDate": "2026-09-18",
+      "notes": "$37.50/hr, capped 20 hrs/mo (~$750/mo), 1099 contractor. NYC-based (mostly remote, but need to know the space for shoots). Design/video/social work for a Chelsea recording studio; some Cargo site work. Apply: resume + portfolio/work samples + short note on why the role interests you, to booking@laurelroadstudios.com, subject 'Design & Web'. Start ASAP, target Oct 1. Listing: https://www.nyfa.org/jobs/job-info/?title=graphic-design-%26-web-presence-—-chelsea-recording-studio-(part-time)&id=fb308f46-dc1f-4006-bf84-494025896691"
     }
   ],
   "checkins": [
