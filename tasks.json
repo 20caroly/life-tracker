@@ -41,6 +41,14 @@
       "status": "todo",
       "dueDate": "2026-09-18",
       "notes": "$37.50/hr, capped 20 hrs/mo (~$750/mo), 1099 contractor. NYC-based (mostly remote, but need to know the space for shoots). Design/video/social work for a Chelsea recording studio; some Cargo site work. Apply: resume + portfolio/work samples + short note on why the role interests you, to booking@laurelroadstudios.com, subject 'Design & Web'. Start ASAP, target Oct 1. Listing: https://www.nyfa.org/jobs/job-info/?title=graphic-design-%26-web-presence-—-chelsea-recording-studio-(part-time)&id=fb308f46-dc1f-4006-bf84-494025896691"
+    },
+    {
+      "id": "d2c4e8a1-5b7f-4e3a-9c8d-1a6f3b0e7d92",
+      "category": "job",
+      "title": "Apply to MoMA job",
+      "status": "doing",
+      "dueDate": null,
+      "notes": "First step: pull up the MoMA careers page and find the listing"
     }
   ],
   "checkins": [
@@ -547,6 +555,10 @@
     {
       "date": "2026-08-20",
       "taskIds": ["b7e1a4d0-3c2f-4a91-9e6b-1f2d5c8a7b3e"]
+    },
+    {
+      "date": "2026-08-24",
+      "taskIds": ["d2c4e8a1-5b7f-4e3a-9c8d-1a6f3b0e7d92"]
     }
   ],
   "scheduleLog": [
